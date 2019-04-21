@@ -1,5 +1,6 @@
 package com.redit;
 
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
@@ -8,7 +9,9 @@ import com.j256.ormlite.table.TableUtils;
 import com.redit.db.Employee;
 import com.redit.db.EmployeeExpenses;
 import com.redit.db.Expense;
-import com.redit.service.ConvService;
+import com.redit.exceptions.CustomExceptionMapper;
+import com.redit.service.EmployeeService;
+import com.redit.service.ExpenseService;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -35,11 +38,11 @@ public class ConvApp extends Application {
 
     public static void main(String[] args) {
         try {
-            singletons.add(new ConvService());
+            setupServices();
 
-            // Setup ORM
             setupSeed();
 
+            // Start the server
             new ConvApp().run();
 
         } catch (Throwable t) {
@@ -51,7 +54,14 @@ public class ConvApp extends Application {
         return new JdbcPooledConnectionSource(DB_URL, DB_USER, DB_PASS);
     }
 
-    public static void setupSeed() throws SQLException, IOException {
+    private static void setupServices() {
+        singletons.add(new EmployeeService());
+        singletons.add(new ExpenseService());
+
+        singletons.add(new CustomExceptionMapper());
+    }
+
+    private static void setupSeed() throws SQLException, IOException {
 
 
         /// Create Database, if not exists
@@ -76,13 +86,13 @@ public class ConvApp extends Application {
                 return;
             }
 
+            Dao<Employee, Integer> dao = Employee.getDao(con);
             for (int numEmp = 0; numEmp < 5; numEmp++) {
-                Employee.getDao(con).create(new Employee("Employee" + numEmp, false));
+                dao.create(new Employee("Employee" + numEmp, false));
             }
             for (int numMan = 0; numMan < 3; numMan++) {
-                Employee.getDao(con).create(new Employee("Manager" + numMan, true));
+                dao.create(new Employee("Manager" + numMan, true));
             }
-
         }
     }
 

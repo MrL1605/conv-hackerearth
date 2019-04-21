@@ -43,7 +43,7 @@ public class Employee {
         return DaoManager.createDao(con, Employee.class);
     }
 
-    public void addApprovedExpense(int amount) {
+    public void addApprovedExpense(long amount) {
         reimbursement += amount;
     }
 
