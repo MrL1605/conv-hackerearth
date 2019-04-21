@@ -4,7 +4,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.redit.db.Employee;
 import com.redit.db.EmployeeExpenses;
 import com.redit.db.Expense;
-import com.redit.exceptions.ValidationException;
+import com.redit.utils.ValidationException;
 
 import javax.ws.rs.*;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.redit.exceptions;
+package com.redit.utils;
 
 
 import javax.ws.rs.core.MediaType;
@@ -10,10 +10,10 @@ import javax.ws.rs.ext.ExceptionMapper;
  * Created On : 21 Apr 2019
  * Organisation: CustomerXPs Software Private Ltd.
  */
-public class CustomExceptionMapper implements ExceptionMapper {
+public class CustomExceptionMapper implements ExceptionMapper<RuntimeException> {
 
     @Override
-    public Response toResponse(Throwable exception) {
+    public Response toResponse(RuntimeException exception) {
 
         if (exception instanceof ValidationException) {
             return Response

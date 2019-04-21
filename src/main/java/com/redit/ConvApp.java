@@ -9,18 +9,22 @@ import com.j256.ormlite.table.TableUtils;
 import com.redit.db.Employee;
 import com.redit.db.EmployeeExpenses;
 import com.redit.db.Expense;
-import com.redit.exceptions.CustomExceptionMapper;
+import com.redit.db.Session;
 import com.redit.service.EmployeeService;
 import com.redit.service.ExpenseService;
+import com.redit.utils.CustomExceptionMapper;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 
+import javax.servlet.DispatcherType;
 import javax.ws.rs.core.Application;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -82,6 +86,8 @@ public class ConvApp extends Application {
             TableUtils.createTableIfNotExists(con, Employee.class);
             TableUtils.createTableIfNotExists(con, Expense.class);
             TableUtils.createTableIfNotExists(con, EmployeeExpenses.class);
+            TableUtils.createTableIfNotExists(con, Session.class);
+
             if (Employee.getDao(con).countOf() != 0) {
                 return;
             }
@@ -120,6 +126,12 @@ public class ConvApp extends Application {
         context.addServlet(restEasyServlet, APPLICATION_PATH + "/*");
         final ServletHolder defaultServlet = new ServletHolder(new DefaultServlet());
         context.addServlet(defaultServlet, CONTEXT_ROOT);
+
+        final FilterHolder authFilter = new FilterHolder();
+        authFilter.setName("auth-filter");
+        authFilter.setClassName("com.redit.utils.AuthFilter");
+        context.addFilter(authFilter, APPLICATION_PATH + "/*",
+                EnumSet.of(DispatcherType.REQUEST));
 
         server.start();
         server.join();

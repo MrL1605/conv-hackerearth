@@ -22,7 +22,7 @@ public class Employee {
     @DatabaseField(generatedId = true)
     public int id;
 
-    @DatabaseField(columnName = "name", canBeNull = false)
+    @DatabaseField(columnName = "name", unique = true, canBeNull = false)
     public String name;
 
     @DatabaseField(columnName = "is_manager", canBeNull = false)
@@ -30,6 +30,10 @@ public class Employee {
 
     @DatabaseField(columnName = "reimbursement", canBeNull = false)
     public Long reimbursement = 0L;
+
+    // TODO: encrypt this
+    @DatabaseField(columnName = "reimbursement", canBeNull = false)
+    public String password;
 
     public Employee() {
     }
