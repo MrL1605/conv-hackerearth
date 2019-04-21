@@ -1,0 +1,27 @@
+version: "3.5"
+
+
+services:
+  conv-app:
+    image: "convergence-exp:latest"
+    ports:
+      - "54321:8080"
+    networks:
+      - conv-network
+
+  conv-db:
+    image: "mariadb:10.2.17-bionic"
+    networks:
+      - conv-network
+    ports:
+      - "3319:3306"
+    environment:
+      - 'MYSQL_ROOT_PASSWORD=redit9'
+    volumes:
+      - "db-store:/var/lib/mysql"
+
+networks:
+  conv-network:
+
+volumes:
+  db-store:
