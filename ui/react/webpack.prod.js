@@ -16,7 +16,7 @@ module.exports = {
 
         './src/index.tsx', // your app's entry point
     ],
-    mode: "production",
+    // mode: "production",
     output: {
         path: __dirname + "/public/app",
         publicPath: '/app/',
@@ -34,10 +34,10 @@ module.exports = {
                 },
             }
         },
-        minimizer: [
-            new UglifyJsPlugin({parallel: true})
-        ],
-        runtimeChunk: true
+        // minimizer: [
+        //     new UglifyJsPlugin({parallel: true})
+        // ],
+        runtimeChunk: false
     },
     module: {
         rules: loadersConf
@@ -52,7 +52,9 @@ module.exports = {
             "styles": path.resolve(__dirname, 'styles/'),
         }
     },
-
+    externals: {
+        'react': 'React'
+    },
     plugins: [
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.NamedModulesPlugin(),

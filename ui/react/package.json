@@ -4,7 +4,8 @@
   "description": "Frontend for Conv",
   "main": "''",
   "scripts": {
-    "build": "webpack --config webpack.prod.js --progress --colors"
+    "cp-build": "cp -vr public/app ../build/ && cp -v index.html ../build/app",
+    "build": "webpack --config webpack.prod.js --progress --colors && npm run cp-build"
   },
   "author": "Lalit Umbarkar",
   "dependencies": {

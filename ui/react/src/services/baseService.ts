@@ -1,7 +1,6 @@
 import axios, {AxiosResponse} from 'axios';
 import Swal, {SweetAlertOptions} from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import set = Reflect.set;
 
 const swal = withReactContent(Swal);
 

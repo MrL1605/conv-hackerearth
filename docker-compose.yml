@@ -2,12 +2,22 @@ version: "3.5"
 
 
 services:
+
+  conv-ui:
+    image: "redit/conv-ui:latest"
+    ports:
+      - "5443:443"
+    networks:
+      - conv-network
+
   conv-app:
     image: "redit/conv-app:latest"
     ports:
-      - "54321:8080"
+      - "5444:8080"
     networks:
       - conv-network
+    depends_on:
+      - conv-db
 
   conv-db:
     image: "mariadb:10.2.17-bionic"

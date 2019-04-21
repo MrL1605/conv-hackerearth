@@ -1,5 +1,5 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
 import {GLOBAL} from "./commons/GLOBAL";
 import {GenesisComponent} from "./components/genesis";
 import {LoginRoot} from "./components/loginRoot";
