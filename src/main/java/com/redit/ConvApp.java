@@ -1,5 +1,11 @@
 package com.redit;
 
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.support.DatabaseConnection;
+import com.j256.ormlite.table.TableUtils;
+import com.redit.db.Employee;
 import com.redit.service.ConvService;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -8,6 +14,8 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 
 import javax.ws.rs.core.Application;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,12 +23,9 @@ public class ConvApp extends Application {
 
     private static final String APPLICATION_PATH = "/api";
     private static final String CONTEXT_ROOT = "/";
-
-    @Override
-    public Set<Object> getSingletons() {
-        return singletons;
-    }
-
+    private static final String DB_URL = "jdbc:mariadb://conv-db:3306/conv";
+    private static final String DB_USER = "root";
+    private static final String DB_PASS = "redit9";
     private static Set<Object> singletons = new HashSet<>();
 
     public ConvApp() {
@@ -29,36 +34,59 @@ public class ConvApp extends Application {
     public static void main(String[] args) {
         try {
             singletons.add(new ConvService());
+
+            // Setup ORM
+            setupSeed();
+
             new ConvApp().run();
+
         } catch (Throwable t) {
             t.printStackTrace();
         }
     }
 
+    public static JdbcConnectionSource getConnection() throws SQLException {
+        return new JdbcPooledConnectionSource(DB_URL, DB_USER, DB_PASS);
+    }
+
+    public static void setupSeed() throws SQLException, IOException {
+        try (ConnectionSource con = new JdbcPooledConnectionSource(
+                "jdbc:mariadb://conv-db:3306", DB_USER, DB_PASS)) {
+            con.getReadWriteConnection("some_table").executeStatement(
+                    "CREATE DATABASE IF NOT EXISTS conv;", DatabaseConnection.DEFAULT_RESULT_FLAGS
+            );
+        }
+        try (ConnectionSource con = getConnection()) {
+            TableUtils.createTableIfNotExists(con, Employee.class);
+        }
+    }
+
+    @Override
+    public Set<Object> getSingletons() {
+        return singletons;
+    }
+
     public void run() throws Exception {
 
+        /*
+            Setup server
+        */
         final int port = 8080;
         final Server server = new Server(port);
 
         // Setup the basic Application "context" at "/".
-        // This is also known as the handler tree (in Jetty speak).
         final ServletContextHandler context = new ServletContextHandler(
                 server, CONTEXT_ROOT);
 
         // Setup RESTEasy's HttpServletDispatcher at "/api/*".
         final ServletHolder restEasyServlet = new ServletHolder(new HttpServletDispatcher());
         restEasyServlet.setInitParameter("resteasy.servlet.mapping.prefix", APPLICATION_PATH);
-        restEasyServlet.setInitParameter("javax.ws.rs.Application",
-                "com.redit.ConvApp");
+        restEasyServlet.setInitParameter("javax.ws.rs.Application", "com.redit.ConvApp");
         context.addServlet(restEasyServlet, APPLICATION_PATH + "/*");
-
-        // Setup the DefaultServlet at "/".
-        final ServletHolder defaultServlet = new ServletHolder(
-                new DefaultServlet());
+        final ServletHolder defaultServlet = new ServletHolder(new DefaultServlet());
         context.addServlet(defaultServlet, CONTEXT_ROOT);
 
         server.start();
         server.join();
     }
-
 }
