@@ -1,6 +1,10 @@
 # conv-hackerearth
 A simple expenses handler for a contest in hackerearth
 
+
+Source can be found at [Github](https://github.com/MrL1605/conv-hackerearth)
+
+
 ## Building
 
 You will not need the images if you only need to view the application.

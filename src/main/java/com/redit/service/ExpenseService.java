@@ -10,6 +10,7 @@ import com.redit.utils.ValidationException;
 import javax.ws.rs.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import static com.redit.ConvApp.getConnection;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -67,8 +68,9 @@ public class ExpenseService {
             if (expense == null)
                 throw new ValidationException("No such expense");
 
-            for (EmployeeExpenses ee : EmployeeExpenses.getDao(con).queryForEq("expense", expense)) {
-                ee.employee.addApprovedExpense(expense.amount);
+            List<EmployeeExpenses> eeList = EmployeeExpenses.getDao(con).queryForEq("expense", expense);
+            for (EmployeeExpenses ee : eeList) {
+                ee.employee.addApprovedExpense(expense.amount / eeList.size());
                 Employee.getDao(con).update(ee.employee);
             }
 

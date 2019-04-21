@@ -52,9 +52,6 @@ module.exports = {
             "styles": path.resolve(__dirname, 'styles/'),
         }
     },
-    externals: {
-        'react': 'React'
-    },
     plugins: [
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.NamedModulesPlugin(),
