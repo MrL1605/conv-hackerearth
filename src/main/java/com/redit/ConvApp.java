@@ -6,6 +6,8 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 import com.redit.db.Employee;
+import com.redit.db.EmployeeExpenses;
+import com.redit.db.Expense;
 import com.redit.service.ConvService;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -50,14 +52,37 @@ public class ConvApp extends Application {
     }
 
     public static void setupSeed() throws SQLException, IOException {
+
+
+        /// Create Database, if not exists
         try (ConnectionSource con = new JdbcPooledConnectionSource(
                 "jdbc:mariadb://conv-db:3306", DB_USER, DB_PASS)) {
+
+            // To start with empty database during dev
+            con.getReadWriteConnection("some_table").executeStatement(
+                    "DROP DATABASE IF EXISTS conv;", DatabaseConnection.DEFAULT_RESULT_FLAGS
+            );
+
             con.getReadWriteConnection("some_table").executeStatement(
                     "CREATE DATABASE IF NOT EXISTS conv;", DatabaseConnection.DEFAULT_RESULT_FLAGS
             );
         }
+        // Setup seed for Application
         try (ConnectionSource con = getConnection()) {
             TableUtils.createTableIfNotExists(con, Employee.class);
+            TableUtils.createTableIfNotExists(con, Expense.class);
+            TableUtils.createTableIfNotExists(con, EmployeeExpenses.class);
+            if (Employee.getDao(con).countOf() != 0) {
+                return;
+            }
+
+            for (int numEmp = 0; numEmp < 5; numEmp++) {
+                Employee.getDao(con).create(new Employee("Employee" + numEmp, false));
+            }
+            for (int numMan = 0; numMan < 3; numMan++) {
+                Employee.getDao(con).create(new Employee("Manager" + numMan, true));
+            }
+
         }
     }
 

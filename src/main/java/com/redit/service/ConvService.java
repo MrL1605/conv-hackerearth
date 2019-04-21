@@ -26,14 +26,13 @@ public class ConvService {
 
     @GET
     @Path("/root")
-    public String test() throws SQLException, IOException {
-        System.out.println("here");
+    public Employee test() throws SQLException, IOException {
+
+        Employee emp = new Employee("Name" + System.currentTimeMillis(), false);
         try (ConnectionSource con = getConnection()) {
-            System.out.println(Employee.getDao(con).create(new Employee("Name" + System.currentTimeMillis())));
+            System.out.println(Employee.getDao(con).create(emp));
             System.out.println(Employee.getDao(con).countOf());
         }
-
-        System.out.println();
-        return "Hello";
+        return emp;
     }
 }

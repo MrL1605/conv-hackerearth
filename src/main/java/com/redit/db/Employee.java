@@ -2,7 +2,9 @@ package com.redit.db;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -18,20 +20,31 @@ import java.sql.SQLException;
 public class Employee {
 
     @DatabaseField(generatedId = true)
-    private int id;
+    public int id;
 
     @DatabaseField(columnName = "name", canBeNull = false)
-    private String name;
+    public String name;
+
+    @DatabaseField(columnName = "is_manager", canBeNull = false)
+    public Boolean isManager;
+
+    @DatabaseField(columnName = "reimbursement", canBeNull = false)
+    public Long reimbursement = 0L;
 
     public Employee() {
     }
 
-    public Employee(String name) {
+    public Employee(String name, Boolean isManager) {
         this.name = name;
+        this.isManager = isManager;
     }
 
     public static Dao<Employee, Integer> getDao(ConnectionSource con) throws SQLException {
         return DaoManager.createDao(con, Employee.class);
+    }
+
+    public void addApprovedExpense(int amount) {
+        reimbursement += amount;
     }
 
 }
