@@ -26,9 +26,11 @@ dependencies {
 
     compile group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version: '3.1.4.Final'
     compile group: 'org.jboss.resteasy', name: 'resteasy-jackson-provider', version: '3.1.4.Final'
+    compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.0.v20161208'
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.0.v20161208'
 }
 
-mainClassName = 'com.redit.service.ConvApp'
+mainClassName = 'com.redit.ConvApp'
 
 docker {
     javaApplication {
