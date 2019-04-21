@@ -94,10 +94,10 @@ public class ConvApp extends Application {
 
             Dao<Employee, Integer> dao = Employee.getDao(con);
             for (int numEmp = 0; numEmp < 5; numEmp++) {
-                dao.create(new Employee("Employee" + numEmp, false));
+                dao.create(new Employee("Employee" + numEmp, false).setPassword("overthere"));
             }
             for (int numMan = 0; numMan < 3; numMan++) {
-                dao.create(new Employee("Manager" + numMan, true));
+                dao.create(new Employee("Manager" + numMan, true).setPassword("overhere"));
             }
         }
     }

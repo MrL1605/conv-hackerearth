@@ -32,7 +32,7 @@ public class Employee {
     public Long reimbursement = 0L;
 
     // TODO: encrypt this
-    @DatabaseField(columnName = "reimbursement", canBeNull = false)
+    @DatabaseField(columnName = "password", canBeNull = false)
     public String password;
 
     public Employee() {
@@ -41,6 +41,11 @@ public class Employee {
     public Employee(String name, Boolean isManager) {
         this.name = name;
         this.isManager = isManager;
+    }
+
+    public Employee setPassword(String password) {
+        this.password = password;
+        return this;
     }
 
     public static Dao<Employee, Integer> getDao(ConnectionSource con) throws SQLException {

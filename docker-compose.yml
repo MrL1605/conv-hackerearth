@@ -3,7 +3,7 @@ version: "3.5"
 
 services:
   conv-app:
-    image: "convergence-exp:latest"
+    image: "redit/conv-app:latest"
     ports:
       - "54321:8080"
     networks:
