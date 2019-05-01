@@ -3,21 +3,26 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgModule} from "@angular/core";
 import {HttpModule} from "@angular/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {GenesisMain} from "./components/genesis-main";
+import {GenesisMainComponent} from "./components/genesis-main";
+import {SharedService} from "./services/shared";
+import {LoginService} from "./services/login";
+import {LoginComponent} from "./components/login";
 
 // UOW Components, Services
 
 @NgModule({
     declarations: [
-        GenesisMain,
+        GenesisMainComponent, LoginComponent
     ],
     imports: [
         BrowserModule, HttpModule, ReactiveFormsModule, FormsModule, BrowserAnimationsModule,
         // AppRouter
     ],
-    providers: [],
+    providers: [
+        SharedService, LoginService
+    ],
     bootstrap: [
-        GenesisMain
+        GenesisMainComponent
     ]
 })
 export class AppModule {

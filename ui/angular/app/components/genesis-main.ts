@@ -4,18 +4,33 @@
  * Organisation: CustomerXPs Software Private Ltd.
  */
 import {Component, OnInit} from "@angular/core";
+import {LoginService} from "../services/login";
 
 @Component({
     selector: 'genesis',
-    template: require('../templates/genesis-main.template.html'),
+    template: require('../templates/genesis-main.html'),
 })
-export class GenesisMain implements OnInit {
+export class GenesisMainComponent implements OnInit {
 
-    constructor() {
+    isChecking: boolean = true;
+    isLoggedIn: boolean = false;
+
+    constructor(private loginService: LoginService) {
     }
 
     ngOnInit() {
+        this.loginService.isLoggedIn()
+            .subscribe(() => {
+                this.isChecking = false;
+                this.isLoggedIn = true;
+            }, (err) => {
+                this.isChecking = false;
+                this.isLoggedIn = false;
+            });
+    }
 
+    toggleLogin() {
+        this.isLoggedIn = true;
     }
 
 }

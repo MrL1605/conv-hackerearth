@@ -1,0 +1,14 @@
+<div *ngIf="!isChecking">
+
+    <div *ngIf="!isLoggedIn">
+        <login (login-trigger)="toggleLogin()"></login>
+    </div>
+    <div *ngIf="isLoggedIn">
+        
+    </div>
+
+</div>
+<div *ngIf="isChecking">
+    checking
+</div>
+

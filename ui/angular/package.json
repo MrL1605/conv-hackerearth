@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "sideEffects": false,
   "scripts": {
-    "clean": "rm -rf _dist",
+    "clean": "rm -rf _dist/*",
     "cp-build": "mkdir -p ../build/app && cp -vr _dist/* ../build/app && cp -v assets/* ../build/app",
     "builddev": "webpack --config dev.webpack.config.js",
     "build": "npm run clean && webpack --config prod.webpack.config.js && npm run cp-build",
