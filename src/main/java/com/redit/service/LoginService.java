@@ -4,6 +4,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.redit.db.Employee;
 import com.redit.db.LoginCred;
 import com.redit.db.Session;
+import com.redit.utils.UserPrincipal;
 import com.redit.utils.ValidationException;
 
 import javax.servlet.http.Cookie;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static com.redit.ConvApp.getConnection;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;

@@ -58,7 +58,7 @@ public class AuthFilter implements Filter {
 
         Pattern ignoredPattern = Pattern.compile("^/api/login.*");
         boolean toIgnore = ignoredPattern.matcher(path).matches();
-        if (!toIgnore) {
+        if (toIgnore) {
             System.out.println("Ignoring filter for path[" + path + "]");
             filterChain.doFilter(servletRequest, servletResponse);
             return;

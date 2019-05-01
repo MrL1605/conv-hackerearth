@@ -4,8 +4,9 @@
 CWD=`pwd`
 BASEDIR=$( cd ${CWD} && cd `dirname $0` && pwd )
 
+# npm i && \
+
 cd ${BASEDIR}/angular/ && \
-npm i && \
 npm run build && \
 cd ../build && \
 docker build -t redit/conv-ui .

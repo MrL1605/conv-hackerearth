@@ -12,6 +12,8 @@ import com.redit.db.Expense;
 import com.redit.db.Session;
 import com.redit.service.EmployeeService;
 import com.redit.service.ExpenseService;
+import com.redit.service.LoginService;
+import com.redit.service.SessionService;
 import com.redit.utils.CustomExceptionMapper;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -64,6 +66,8 @@ public class ConvApp extends Application {
     private static void setupServices() {
         singletons.add(new EmployeeService());
         singletons.add(new ExpenseService());
+        singletons.add(new LoginService());
+        singletons.add(new SessionService());
 
         singletons.add(new CustomExceptionMapper());
     }
