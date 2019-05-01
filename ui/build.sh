@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
+# Get Basedir
+CWD=`pwd`
+BASEDIR=$( cd ${CWD} && cd `dirname $0` && pwd )
 
-cd ui/angular/ && \
+cd ${BASEDIR}/angular/ && \
 npm i && \
 npm run build && \
 cd ../build && \
