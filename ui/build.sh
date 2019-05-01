@@ -1,6 +1,7 @@
+#!/usr/bin/env bash
 
 
-cd ui/react/ && \
+cd ui/angular/ && \
 npm i && \
 npm run build && \
 cd ../build && \
