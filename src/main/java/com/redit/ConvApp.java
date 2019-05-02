@@ -106,6 +106,15 @@ public class ConvApp extends Application {
             for (int numMan = 0; numMan < 3; numMan++) {
                 dao.create(new Employee("Manager" + numMan, true).setPassword("overhere"));
             }
+            Employee manager = dao.queryForEq("name", "Manager0").get(0);
+            for (int numExp = 0; numExp < 3; numExp++) {
+                Expense expense = new Expense();
+                expense.isApproved = numExp % 2 == 0;
+                expense.amount = (numExp + 100) * 3L;
+                expense.manager = manager;
+                expense.title = "Some Exp" + numExp;
+                Expense.getDao(con).create(expense);
+            }
         }
     }
 

@@ -4,20 +4,16 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.redit.db.Employee;
 import com.redit.db.LoginCred;
 import com.redit.db.Session;
-import com.redit.utils.UserPrincipal;
 import com.redit.utils.ValidationException;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Logger;
 
 import static com.redit.ConvApp.getConnection;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -32,7 +28,9 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Produces(APPLICATION_JSON)
 public class LoginService {
 
+    @POST
     @Path("login")
+    @Consumes(APPLICATION_JSON)
     public int login(@Context HttpServletRequest request,
                      @Context HttpServletResponse response,
                      LoginCred cred) throws SQLException, IOException {
@@ -46,7 +44,10 @@ public class LoginService {
             if (!emp.get(0).password.equals(cred.password))
                 throw new ValidationException("Incorrect credentials");
 
-            String sessionId = System.currentTimeMillis() + "";
+            if (Session.getDao(con).queryForEq("user", emp.get(0).id).size() != 0)
+                throw new ValidationException("User already logged in");
+
+            String sessionId = System.currentTimeMillis() + "@" + emp.get(0).name;
 
             Cookie c = new Cookie("session_id", sessionId);
             c.setPath("/");
@@ -58,7 +59,39 @@ public class LoginService {
                 c.setSecure(true);
             response.addCookie(c);
 
-            return Session.getDao(con).create(new Session(emp.get(0).name, sessionId));
+            return Session.getDao(con).create(new Session(emp.get(0).id, sessionId));
+        }
+    }
+
+    @GET
+    @Path("logout")
+    public int logout(@Context HttpServletRequest request,
+                      @Context HttpServletResponse response) throws SQLException, IOException {
+
+        try (ConnectionSource con = getConnection()) {
+
+            String sessionId = "";
+            for (Cookie c : request.getCookies()) {
+                if (c.getName().equals("session_id"))
+                    sessionId = c.getValue();
+            }
+
+            List<Session> sessionList = Session.getDao(con).queryForEq("session_id", sessionId);
+            int count = 0;
+            for (Session s : sessionList)
+                count += Session.getDao(con).delete(s);
+
+            Cookie c = new Cookie("session_id", "");
+            c.setPath("/");
+            c.setMaxAge(-1);
+            // TODO: If possible use DN
+            // c.setDomain(System.getenv("LOGIN_DN"));
+
+            // Only set cookie secure only if login URL was https
+            if (request.getRequestURL().toString().startsWith("https"))
+                c.setSecure(true);
+            response.addCookie(c);
+            return count;
         }
     }
 

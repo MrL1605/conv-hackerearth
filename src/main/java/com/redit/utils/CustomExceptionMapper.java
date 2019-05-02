@@ -10,10 +10,10 @@ import javax.ws.rs.ext.ExceptionMapper;
  * Created On : 21 Apr 2019
  * Organisation: CustomerXPs Software Private Ltd.
  */
-public class CustomExceptionMapper implements ExceptionMapper<RuntimeException> {
+public class CustomExceptionMapper implements ExceptionMapper<Exception> {
 
     @Override
-    public Response toResponse(RuntimeException exception) {
+    public Response toResponse(Exception exception) {
 
         if (exception instanceof ValidationException) {
             return Response

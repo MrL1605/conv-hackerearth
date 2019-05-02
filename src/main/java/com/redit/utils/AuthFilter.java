@@ -77,7 +77,7 @@ public class AuthFilter implements Filter {
                 return;
             }
 
-            UserRequestWrapper wrapper = new UserRequestWrapper(request, new UserPrincipal(session.sessionId, session.user));
+            UserRequestWrapper wrapper = new UserRequestWrapper(request, new UserPrincipal(session));
             filterChain.doFilter(wrapper, servletResponse);
 
         } catch (SQLException e) {

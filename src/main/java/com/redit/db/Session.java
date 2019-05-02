@@ -17,7 +17,7 @@ import java.sql.SQLException;
 public class Session {
 
     @DatabaseField(columnName = "user", canBeNull = false, unique = true)
-    public String user;
+    public int user;
 
     @DatabaseField(id = true, columnName = "session_id", canBeNull = false, unique = true)
     public String sessionId;
@@ -25,7 +25,7 @@ public class Session {
     public Session() {
     }
 
-    public Session(String user, String sessionId) {
+    public Session(int user, String sessionId) {
         this.user = user;
         this.sessionId = sessionId;
     }

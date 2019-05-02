@@ -39,7 +39,7 @@ public class ExpenseService {
 
     @POST
     @Path("/")
-    public Integer getExpense(Expense expense) throws SQLException, IOException {
+    public Integer addExpense(Expense expense) throws SQLException, IOException {
 
         try (ConnectionSource con = getConnection()) {
 

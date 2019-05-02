@@ -7,6 +7,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTable;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.sql.SQLException;
 
@@ -32,6 +33,7 @@ public class Employee {
     public Long reimbursement = 0L;
 
     // TODO: encrypt this
+    @JsonIgnore
     @DatabaseField(columnName = "password", canBeNull = false)
     public String password;
 
@@ -54,6 +56,20 @@ public class Employee {
 
     public void addApprovedExpense(long amount) {
         reimbursement += amount;
+    }
+
+    public EmployeeSummary getSummary() {
+        return new EmployeeSummary(this);
+    }
+
+    public static class EmployeeSummary {
+        public int id;
+        public String name;
+
+        public EmployeeSummary(Employee e) {
+            this.id = e.id;
+            this.name = e.name;
+        }
     }
 
 }

@@ -4,13 +4,16 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.redit.db.Employee;
 import com.redit.db.EmployeeExpenses;
 import com.redit.db.Expense;
+import com.redit.utils.UserPrincipal;
 import com.redit.utils.ValidationException;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.redit.ConvApp.getConnection;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -39,8 +42,19 @@ public class EmployeeService {
     }
 
     @GET
+    @Path("/")
+    public List<Employee.EmployeeSummary> getAllEmployees() throws SQLException, IOException {
+        try (ConnectionSource con = getConnection()) {
+            return Employee.getDao(con)
+                    .queryForAll()
+                    .parallelStream().map(Employee::getSummary)
+                    .collect(Collectors.toList());
+        }
+    }
+
+    @GET
     @Path("${id}")
-    public Employee getExpense(@PathParam("id") Integer id) throws SQLException, IOException {
+    public Employee getEmployee(@PathParam("id") Integer id) throws SQLException, IOException {
         try (ConnectionSource con = getConnection()) {
             Employee emp = Employee.getDao(con).queryForId(id);
             if (emp == null)
@@ -50,15 +64,14 @@ public class EmployeeService {
     }
 
     @GET
-    @Path("expenses/${id}")
-    public List<Expense> getMyExpenses(@PathParam("id") Integer id) throws SQLException, IOException {
+    @Path("expenses")
+    public List<Expense.ExpenseSummary> getMyExpenses(@Context UserPrincipal principal) throws SQLException, IOException {
 
-        // TODO: remove id and replace with session
         try (ConnectionSource con = getConnection()) {
-            Employee emp = Employee.getDao(con).queryForId(id);
-            List<Expense> expenseList = new ArrayList<>();
+            Employee emp = Employee.getDao(con).queryForId(principal.userId);
+            List<Expense.ExpenseSummary> expenseList = new ArrayList<>();
             for (EmployeeExpenses ee : EmployeeExpenses.getDao(con).queryForEq("employee", emp)) {
-                expenseList.add(ee.expense);
+                expenseList.add(ee.expense.getSummary());
             }
             return expenseList;
         }

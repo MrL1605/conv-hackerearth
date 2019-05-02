@@ -35,4 +35,21 @@ public class Expense {
         return DaoManager.createDao(con, Expense.class);
     }
 
+    public ExpenseSummary getSummary() {
+        return new ExpenseSummary(this);
+    }
+
+    public static class ExpenseSummary {
+        public int id;
+        public String title;
+        public int managerId;
+
+        public ExpenseSummary(Expense e) {
+            this.id = e.id;
+            this.title = e.title;
+            this.managerId = e.manager.id;
+        }
+
+    }
+
 }
