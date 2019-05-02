@@ -33,4 +33,11 @@ export class GenesisMainComponent implements OnInit {
         this.isLoggedIn = true;
     }
 
+    logout() {
+        this.loginService.logout()
+            .subscribe(() => {
+                window.location.reload();
+            })
+    }
+
 }

@@ -72,38 +72,8 @@ export class SharedService {
     public static getFormattedError(errorText: string): string {
         let htmlHead = errorText.split("<style")[0];
         let htmlBody = errorText.split("</style>")[1];
-        if (htmlBody === undefined) {
+        if (!htmlBody) {
             htmlBody = "";
-            try {
-                let parseError = JSON.parse(htmlHead);
-                htmlHead = "";
-                if (parseError && parseError["errors"]) {
-                    htmlHead += `<br>
-                                 <div class='row'>
-                                    <div class="col-sm-8" style="text-align: justify; font-weight: bold;"><b>Error fields</b></div>
-                                    <div class="col-sm-4"></div>
-                                    <br>`;
-                    for (let err in parseError["errors"]) {
-                        htmlHead += `<div class="col-sm-6" style="text-align: end;">${err} :</div>
-                                     <div class="col-sm-6" style="text-align: start;"> ${parseError["errors"][err]} </div>
-                                     <br>`;
-                    }
-                    htmlHead += `</div>`;
-                }
-                if (parseError && parseError["missing"]) {
-                    htmlHead += `<div class='row'>
-                                    <div class="col-sm-8" style="text-align: justify; font-weight: bold;"><b>Missing fields</b></div>
-                                    <div class="col-sm-4"></div>
-                                    <br>`;
-                    for (let err in parseError["missing"]) {
-                        htmlHead += `<div class="col-sm-6" style="text-align: end;">${err} :</div>
-                                     <div class="col-sm-6" style="text-align: start;">${parseError["missing"][err]}</div>
-                                 <br>`;
-                    }
-                    htmlHead += `</div>`;
-                }
-            } catch (ignore) {
-            }
         } else {
             htmlBody = htmlBody.replace("h1", "h3").replace("h1", "h3");
         }

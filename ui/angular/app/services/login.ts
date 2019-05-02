@@ -7,6 +7,7 @@ import {Observable} from "rxjs";
 import {Http} from "@angular/http";
 import {SharedService} from "./shared";
 import {Injectable} from "@angular/core";
+import {UserCredentials} from "../models/user-credentials";
 
 @Injectable()
 export class LoginService {
@@ -20,8 +21,14 @@ export class LoginService {
             .catch((e) => SharedService.handleError(e, true));
     }
 
-    login(): Observable<any> {
-        return this.http.get(SharedService.baseUrl + "session/isLoggedIn")
+    login(uc: UserCredentials): Observable<any> {
+        return this.http.post(SharedService.baseUrl + "login/login", uc)
+            .map(SharedService.extractJson)
+            .catch(SharedService.handleError);
+    }
+
+    logout(): Observable<any> {
+        return this.http.get(SharedService.baseUrl + "login/logout")
             .map(SharedService.extractJson)
             .catch(SharedService.handleError);
     }
